@@ -78,7 +78,7 @@ def process_jwt():
     while inx < len(GROUPS):
         os.environ["BEARER_TOKEN_0_GROUP_" + str(inx)] = GROUPS[inx]
         inx += 1
-    sys.stdout.write("0")
+    sys.exit(0)
 
 
 if __name__ == "__main__":
@@ -91,4 +91,4 @@ if __name__ == "__main__":
     if GROUPS or SCOPES:
         process_jwt()
     else:
-        sys.stdout.write("1")
+        sys.exit(1)
