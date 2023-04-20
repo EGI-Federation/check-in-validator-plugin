@@ -80,7 +80,7 @@ def parse_env_variables():
             break
         scopes.append(group)
         idx += 1
-    return unique_id, groups, scopes, issuer, audience
+    return unique_id, eduperson_entitlement, scopes, issuer, audience
 
 
 def parse_jwt(jwt_string):
@@ -97,10 +97,10 @@ def parse_jwt(jwt_string):
     if "aud" in jwt:
         audience = jwt["aud"]
     if "eduperson_entitlement" in jwt:
-        groups = jwt["eduperson_entitlement"]
+        eduperson_entitlement = jwt["eduperson_entitlement"]
     if "scope" in jwt:
         scopes = jwt["scope"].split()
-    return unique_id, groups, scopes, issuer, audience
+    return unique_id, eduperson_entitlement, scopes, issuer, audience
 
 
 def process_jwt(groups, scopes):
@@ -127,10 +127,10 @@ if __name__ == "__main__":
     print("Insert JWT: ")
     i, o, e = select.select([sys.stdin], [], [], TIMEOUT)
     if i:
-        unique_id, groups, scopes, issuer, audience = parse_jwt(sys.stdin.readline().strip())
+        unique_id, entitlements, scopes, issuer, audience = parse_jwt(sys.stdin.readline().strip())
     else:
-        unique_id, groups, scopes, issuer, audience = parse_env_variables()
-    if groups or scopes:
-        process_jwt(groups, scopes)
+        unique_id, entitlements, scopes, issuer, audience = parse_env_variables()
+    if entitlements or scopes:
+        process_jwt(entitlements, scopes)
     else:
         sys.exit(1)
