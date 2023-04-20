@@ -59,10 +59,11 @@ def valid_lines(file):
 
 # Get environment variables
 def parse_env_variables():
-    # issuer = os.getenv("BEARER_TOKEN_0_CLAIM_iss_0")
     unique_id = os.getenv("BEARER_TOKEN_0_CLAIM_voperson_id_0")
     if unique_id is None:
         unique_id = os.getenv("BEARER_TOKEN_0_CLAIM_sub_0")
+    issuer = os.getenv("BEARER_TOKEN_0_CLAIM_iss_0")
+    audience = os.getenv("BEARER_TOKEN_0_CLAIM_aud_0")
     idx = 0
     eduperson_entitlement = []
     while True:
@@ -79,22 +80,27 @@ def parse_env_variables():
             break
         scopes.append(group)
         idx += 1
-    return unique_id, groups, scopes
+    return unique_id, groups, scopes, issuer, audience
 
 
 def parse_jwt(jwt_string):
     jwt = json.loads(jwt_string)
-    # issuer = jwt["iss"]
     unique_id = ""
+    issuer = ""
+    audience = ""
     if "voperson_id" in jwt:
         unique_id = jwt["voperson_id"]
     elif "sub" in jwt:
         unique_id = jwt["sub"]
+    if "iss" in jwt:
+        issuer = jwt["iss"]
+    if "aud" in jwt:
+        audience = jwt["aud"]
     if "eduperson_entitlement" in jwt:
         groups = jwt["eduperson_entitlement"]
     if "scope" in jwt:
         scopes = jwt["scope"].split()
-    return unique_id, groups, scopes
+    return unique_id, groups, scopes, issuer, audience
 
 
 def process_jwt(groups, scopes):
@@ -121,9 +127,9 @@ if __name__ == "__main__":
     print("Insert JWT: ")
     i, o, e = select.select([sys.stdin], [], [], TIMEOUT)
     if i:
-        unique_id, groups, scopes = parse_jwt(sys.stdin.readline().strip())
+        unique_id, groups, scopes, issuer, audience = parse_jwt(sys.stdin.readline().strip())
     else:
-        unique_id, groups, scopes = parse_env_variables()
+        unique_id, groups, scopes, issuer, audience = parse_env_variables()
     if groups or scopes:
         process_jwt(groups, scopes)
     else:
