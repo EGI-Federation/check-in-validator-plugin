@@ -1,3 +1,4 @@
+import argparse
 import json
 import os
 import select
@@ -8,6 +9,56 @@ UNIQUE_IDENTIFIER = ""
 GROUPS = []
 SCOPES = []
 TIMEOUT = 5
+CONFIG_PATHS = [
+    "/etc/condor-ce.d/egi-check-in-validator.conf"
+    "/etc/arc-ce.d/egi-check-in-validator.conf"
+]
+
+
+def parse_arguments():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-c", "--config", help="path of the configuration file.")
+    args = parser.parse_args()
+    return vars(args)
+
+
+def read_config_file(arguments):
+    global CONFIG_PATHS
+    filename = None
+    if os.path.exists(arguments["config"]):
+        filename = arguments["config"]
+    else:
+        for path in CONFIG_PATHS:
+            if os.path.exists(path):
+                filename = path
+    if not filename:
+        sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
+        sys.stderr.write("Configuration file was not found.")
+        sys.exit(1)
+
+    with open(filename, "r") as conf_file:
+        config = valid_lines(conf_file)
+        for line in config:
+            if len(line) == 7:
+                if line[6] == "*":
+                    sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
+                    sys.stderr.write('Line {}: GROUP cannot be "*". Please enter a valid value.'.format(line[0]))
+                    sys.exit(1)
+            else:
+                sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
+                sys.stderr.write("Line {}: invalid mapping configuration".format(line[0]))
+                sys.exit(1)
+
+
+def valid_lines(file):
+    result = []
+    for index, line in enumerate(file):
+        line = line.rstrip()
+        if line and not line.startswith("#"):
+            # The rules will have the format:
+            # LINE_NUMBER MAPPING SUBJECT ISSUER AUDIENCE SCOPE GROUP
+            result.append([index + 1] + line.split(" "))
+    return result
 
 
 # Get environment variables
@@ -82,6 +133,8 @@ def process_jwt():
 
 
 if __name__ == "__main__":
+    args = parse_arguments()
+    read_config_file(args)
     print("Insert JWT: ")
     i, o, e = select.select([sys.stdin], [], [], TIMEOUT)
     if i:
