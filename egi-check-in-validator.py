@@ -1,4 +1,5 @@
 import argparse
+import configparser
 import json
 import os
 import select
@@ -21,40 +22,42 @@ def parse_arguments():
 def read_config_file(arguments):
     global CONFIG_PATHS
     filename = None
-    if os.path.exists(arguments["config"]):
-        filename = arguments["config"]
-    else:
-        for path in CONFIG_PATHS:
-            if os.path.exists(path):
-                filename = path
+    paths = [arguments["config"]] + CONFIG_PATHS
+    for path in paths:
+        if path and os.path.exists(path):
+            filename = path
     if not filename:
         sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
         sys.stderr.write("Configuration file was not found.")
         sys.exit(1)
 
-    with open(filename, "r") as conf_file:
-        config = valid_lines(conf_file)
-        for line in config:
-            if len(line) == 7:
-                if line[6] == "*":
-                    sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-                    sys.stderr.write('Line {}: GROUP cannot be "*". Please enter a valid value.'.format(line[0]))
-                    sys.exit(1)
-            else:
+    config = configparser.ConfigParser()
+    config.read(filename)
+    mappings = {}
+    for key, value in config.items("mappings"):
+        value = value.rstrip()
+        line = value.split(" ")
+        if len(line) == 5:
+            if line[1] == "*":
                 sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-                sys.stderr.write("Line {}: invalid mapping configuration".format(line[0]))
+                sys.stderr.write("\"{}\" Mapper: ISSUER cannot be \"*\". Please enter a valid value.".format(key))
                 sys.exit(1)
-
-
-def valid_lines(file):
-    result = []
-    for index, line in enumerate(file):
-        line = line.rstrip()
-        if line and not line.startswith("#"):
-            # The rules will have the format:
-            # LINE_NUMBER MAPPING SUBJECT ISSUER AUDIENCE SCOPE GROUP
-            result.append([index + 1] + line.split(" "))
-    return result
+            if line[4] == "*":
+                sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
+                sys.stderr.write("\"{}\" Mapper: GROUP cannot be \"*\". Please enter a valid value.".format(key))
+                sys.exit(1)
+        else:
+            sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
+            sys.stderr.write("\"{}\" Mapper: invalid mapping configuration".format(key))
+            sys.exit(1)
+        mappings[key] = {
+            "unique_id": line[0],
+            "issuer": line[1],
+            "audience": line[2],
+            "scope": line[3],
+            "group": line[4]
+        }
+    return mappings
 
 
 # Get environment variables
@@ -123,7 +126,7 @@ def process_jwt(groups, scopes):
 
 if __name__ == "__main__":
     args = parse_arguments()
-    read_config_file(args)
+    rules = read_config_file(args)
     print("Insert JWT: ")
     i, o, e = select.select([sys.stdin], [], [], TIMEOUT)
     if i:
