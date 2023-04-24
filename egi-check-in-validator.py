@@ -118,7 +118,7 @@ def process_jwt(groups, scopes):
     while idx < len(groups):
         os.environ["BEARER_TOKEN_0_GROUP_" + str(idx)] = groups[idx]
         idx += 1
-    sys.exit(0)
+    return groups
 
 
 if __name__ == "__main__":
@@ -131,6 +131,6 @@ if __name__ == "__main__":
     else:
         unique_id, entitlements, scopes, issuer, audience = parse_env_variables()
     if entitlements or scopes:
-        process_jwt(entitlements, scopes)
+        groups = process_jwt(entitlements, scopes)
     else:
         sys.exit(1)
