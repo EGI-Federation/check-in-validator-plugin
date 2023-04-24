@@ -57,7 +57,7 @@ def read_config_file(arguments):
             "scope": line[3],
             "group": line[4]
         }
-    return mappings
+    return mappings, filename
 
 
 # Get environment variables
@@ -126,7 +126,7 @@ def process_jwt(groups, scopes):
 
 if __name__ == "__main__":
     args = parse_arguments()
-    rules = read_config_file(args)
+    rules, config_file_path = read_config_file(args)
     print("Insert JWT: ")
     i, o, e = select.select([sys.stdin], [], [], TIMEOUT)
     if i:
