@@ -7,8 +7,8 @@ import sys
 
 TIMEOUT = 5
 CONFIG_PATHS = [
-    "/etc/condor-ce.d/egi-check-in-validator.conf"
-    "/etc/arc-ce.d/egi-check-in-validator.conf"
+    "/etc/arc-ce.d/egi-check-in-validator.conf",
+    "/etc/condor-ce.d/egi-check-in-validator.conf",
 ]
 
 
@@ -40,22 +40,22 @@ def read_config_file(arguments):
         if len(line) == 5:
             if line[1] == "*":
                 sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-                sys.stderr.write("\"{}\" Mapper: ISSUER cannot be \"*\". Please enter a valid value.".format(key))
+                sys.stderr.write('"{}" Mapper: ISSUER cannot be "*". Please enter a valid value.'.format(key))
                 sys.exit(1)
             if line[4] == "*":
                 sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-                sys.stderr.write("\"{}\" Mapper: GROUP cannot be \"*\". Please enter a valid value.".format(key))
+                sys.stderr.write('"{}" Mapper: GROUP cannot be "*". Please enter a valid value.'.format(key))
                 sys.exit(1)
         else:
             sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-            sys.stderr.write("\"{}\" Mapper: invalid mapping configuration".format(key))
+            sys.stderr.write('"{}" Mapper: invalid mapping configuration'.format(key))
             sys.exit(1)
         mappings[key] = {
             "unique_id": line[0],
             "issuer": line[1],
             "audience": line[2],
             "scope": line[3],
-            "group": line[4]
+            "group": line[4],
         }
     return mappings, filename
 
@@ -91,6 +91,8 @@ def parse_jwt(jwt_string):
     unique_id = ""
     issuer = ""
     audience = ""
+    scopes = []
+    eduperson_entitlement = []
     if "voperson_id" in jwt:
         unique_id = jwt["voperson_id"]
     elif "sub" in jwt:
@@ -158,6 +160,6 @@ if __name__ == "__main__":
         "issuer": issuer,
         "audience": audience,
         "scopes": scopes,
-        "groups": groups
+        "groups": groups,
     }
     map_user(user, rules, config_file_path)
