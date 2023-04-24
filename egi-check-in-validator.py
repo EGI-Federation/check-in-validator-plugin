@@ -124,6 +124,22 @@ def process_jwt(groups, scopes):
     return groups
 
 
+def map_user(user, rules, config_file_path):
+    for rule in rules:
+        if (
+            (rules[rule]["unique_id"] == "*" or user["unique_id"] == rules[rule]["unique_id"])
+            and user["issuer"] == rules[rule]["issuer"]
+            and (rules[rule]["audience"] == "*" or user["audience"] == rules[rule]["audience"])
+            and (rules[rule]["scope"] == "*" or rules[rule]["scope"] in user["scopes"])
+            and rules[rule]["group"] in user["groups"]
+        ):
+            sys.stdout.write("MAPPING: " + str(rule))
+            sys.exit(0)
+    sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
+    sys.stderr.write("Could not match identity based on config file: " + str(config_file_path))
+    sys.exit(1)
+
+
 if __name__ == "__main__":
     args = parse_arguments()
     rules, config_file_path = read_config_file(args)
@@ -137,3 +153,11 @@ if __name__ == "__main__":
         groups = process_jwt(entitlements, scopes)
     else:
         sys.exit(1)
+    user = {
+        "unique_id": unique_id,
+        "issuer": issuer,
+        "audience": audience,
+        "scopes": scopes,
+        "groups": groups
+    }
+    map_user(user, rules, config_file_path)
