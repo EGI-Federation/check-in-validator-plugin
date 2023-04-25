@@ -20,7 +20,7 @@ setup(
     name="egi-check-in-validator",
     author="nikosev",
     author_email="nikos.ev@hotmail.com",
-    version="0.1.0",
+    version="0.2.0",
     license="ASL 2.0",
     url="https://github.com/rciam/check-in-validator-plugin",
     packages=find_packages(),
