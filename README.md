@@ -81,15 +81,15 @@ For the simplest configuration, add the following line to
 issuer of EGI Check-in tokens):
 
 ```text
-SCITOKENS /^https:\/\/aai-dev.egi.eu\/auth\/realms\/egi,.*/ PLUGIN:*
+SCITOKENS /^https:\/\/aai-dev.egi.eu\/auth\/realms\/egi,.*/ PLUGIN:EGI
 ```
 
 Then, create a file under `/etc/condor-ce/config.d/` like this:
 
 ```text
 SEC_SCITOKENS_ALLOW_FOREIGN_TOKENS=true
-SEC_SCITOKENS_PLUGIN_NAMES=EGI-CHECK-IN-VALIDATOR
-SEC_SCITOKENS_PLUGIN_EGI-CHECK-IN-VALIDATOR_COMMAND=$(LOCAL_DIR)/ egi-check-in-validator-0.1.0-1.src.rpm -c <PATH_TO_CONFIG_FILE>
+SEC_SCITOKENS_PLUGIN_NAMES=EGI
+SEC_SCITOKENS_PLUGIN_EGI_COMMAND=$(LIBEXEC)/check-in-validator_sdp.plugin -c <PATH_TO_CONFIG_FILE>
 ```
 
 ## How the plugin works
