@@ -7,8 +7,8 @@ import sys
 
 TIMEOUT = 5
 CONFIG_PATHS = [
-    "/etc/arc-ce.d/egi-check-in-validator.conf",
-    "/etc/condor-ce.d/egi-check-in-validator.conf",
+    "/etc/arc-ce/config.d/egi-check-in-validator.conf",
+    "/etc/condor-ce/config.d/egi-check-in-validator.conf",
 ]
 
 
@@ -135,7 +135,8 @@ def map_user(user, rules, config_file_path):
             and (rules[rule]["scope"] == "*" or rules[rule]["scope"] in user["scopes"])
             and rules[rule]["group"] in user["groups"]
         ):
-            sys.stdout.write("MAPPING: " + str(rule))
+            sys.stdout.write(str(rule))
+            sys.stdout.write("\n")
             sys.exit(0)
     sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
     sys.stderr.write("Could not match identity based on config file: " + str(config_file_path))
@@ -145,7 +146,6 @@ def map_user(user, rules, config_file_path):
 if __name__ == "__main__":
     args = parse_arguments()
     rules, config_file_path = read_config_file(args)
-    print("Insert JWT: ")
     i, o, e = select.select([sys.stdin], [], [], TIMEOUT)
     if i:
         unique_id, entitlements, scopes, issuer, audience = parse_jwt(sys.stdin.readline().strip())

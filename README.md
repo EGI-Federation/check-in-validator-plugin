@@ -123,9 +123,9 @@ Example:
 
 ```bash
 $ python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
-Insert JWT: 
 {"exp":1681213287,"iat":1681209687,"auth_time":1681209570,"jti":"92cfba6e-7c6b-4012-9f6c-2539ef1b76f6","iss":"https://aai-dev.egi.eu/auth/realms/egi","sub":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","typ":"Bearer","azp":"myClientID","nonce":"c2651c777c2c888fcf8244c22b1bcb14","session_state":"515679aa-b818-4902-ae7f-49b198aa0661","scope":"openid offline_access eduperson_entitlement voperson_id eduperson_entitlement_jwt eduperson_entitlement_jwt:urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu profile email","sid":"515679aa-b818-4902-ae7f-49b198aa0661","voperson_id":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","authenticating_authority":"https://idp.admin.grnet.gr/idp/shibboleth","eduperson_entitlement":["urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu"]}
-MAPPING: nikosev%
+nikosev
+%
 ```
 
 ### Example providing JWT via environment variables
@@ -157,6 +157,6 @@ $ export BEARER_TOKEN_0_SCOPE_5=voperson_id
 $ export BEARER_TOKEN_0_SCOPE_6=profile
 $ export BEARER_TOKEN_0_SCOPE_7=email
 $ python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
-Insert JWT:
-MAPPING: nikosev%
+nikosev
+%
 ```
