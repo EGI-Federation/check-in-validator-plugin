@@ -47,6 +47,20 @@ The format of the syntax, is described bellow:
 MAPPING=UNIQUE_IDENTIFIER ISSUER AUDIENCE SCOPE GROUP
 ```
 
+More information about every parameter:
+
+- `MAPPING`: single value (exact match), the identity that will be written to
+  the plugin’s stdout if matched
+- `UNIQUE_IDENTIFIER`: single value (exact match or wildcard (`*`)), the
+  community identifier of the user
+- `ISSUER`: single value (exact match), the issuer of the token
+- `AUDIENCE`: single value (exact match or wildcard (`*`)), the audience that
+  the token is intended for
+- `SCOPE`: single value (exact match), the scope value that should be included
+  in the scopes of the token
+- `GROUP`: single value (exact match), the group/role entitlement that the user
+  should be member of
+
 Example:
 
 ```text
@@ -62,12 +76,12 @@ To execute the script use the command:
 python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
 ```
 
-If the `-c` option is missing then the plugin will try to open the
+Note: If the `-c` option is missing then the plugin will try to open the
 `egi-check-in-validator.ini` file from the following paths:
 
 1. `/etc/egi-check-in-validator/egi-check-in-validator.ini`
-1. `/etc/arc-ce/config.d/egi-check-in-validator.conf`
-1. `/etc/condor-ce/config.d/egi-check-in-validator.conf`
+2. `/etc/arc-ce/config.d/egi-check-in-validator.ini`
+3. `/etc/condor-ce/config.d/egi-check-in-validator.ini`
 
 If the configuration file does not exist in the above paths, then the script
 will fail with the message:
