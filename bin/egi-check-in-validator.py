@@ -9,8 +9,7 @@ import sys
 
 TIMEOUT = 5
 CONFIG_PATHS = [
-    "/etc/arc-ce/config.d/egi-check-in-validator.conf",
-    "/etc/condor-ce/config.d/egi-check-in-validator.conf",
+    "/etc/egi-check-in-validator/egi-check-in-validator.ini",
 ]
 
 

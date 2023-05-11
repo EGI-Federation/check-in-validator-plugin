@@ -77,11 +77,9 @@ python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
 ```
 
 Note: If the `-c` option is missing then the plugin will try to open the
-`egi-check-in-validator.ini` file from the following paths:
+`egi-check-in-validator.ini` file from the following path:
 
 1. `/etc/egi-check-in-validator/egi-check-in-validator.ini`
-2. `/etc/arc-ce/config.d/egi-check-in-validator.ini`
-3. `/etc/condor-ce/config.d/egi-check-in-validator.ini`
 
 If the configuration file does not exist in the above paths, then the script
 will fail with the message:
