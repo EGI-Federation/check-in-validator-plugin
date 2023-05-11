@@ -28,7 +28,7 @@ python3 setup.py build
 %install
 python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUILD_ROOT --record=INSTALLED_FILES
 install --directory -m 644 %{buildroot}%{_sysconfdir}/%{name}/
-cp example-egi-check-in-validator.ini %{buildroot}%{_sysconfdir}/%{name}/egi-check-in-validator.ini
+cp config/example-egi-check-in-validator.ini %{buildroot}%{_sysconfdir}/%{name}/egi-check-in-validator.ini
 
 %clean
 rm -rf $RPM_BUILD_ROOT

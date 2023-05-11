@@ -37,7 +37,7 @@ The `egi-check-in-validator` plugin has it's own configuration file. Just copy
 the example configuration file to the home directory, using the command:
 
 ```bash
-cp example-egi-check-in-validator.ini ~/egi-check-in-validator.ini
+cp config/example-egi-check-in-validator.ini ~/egi-check-in-validator.ini
 ```
 
 Then, edit the configuration file and add the mapping for the users.

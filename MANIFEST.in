@@ -3,5 +3,5 @@ include LICENSE
 include CHANGELOG.md
 include egi-check-in-validator.spec
 include bin/egi-check-in-validator.py
-include example-egi-check-in-validator.ini
+include config/example-egi-check-in-validator.ini
 recursive-exclude bin *.pyc *.pyo
