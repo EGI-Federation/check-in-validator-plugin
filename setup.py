@@ -24,7 +24,7 @@ setup(
     license="ASL 2.0",
     url="https://github.com/rciam/check-in-validator-plugin",
     packages=find_packages(),
-    scripts=["egi-check-in-validator.py"],
+    scripts=["bin/egi-check-in-validator.py"],
     zip_safe=False,
     # install_requires=install_requires,
     # dependency_links=dependency_links,
