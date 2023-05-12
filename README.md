@@ -37,8 +37,8 @@ The `egi-check-in-validator` plugin has it's own configuration files, which are
 placed in `/etc/egi-check-in-validator` when installing the RPM package. The
 available configuration files are:
 
-- `/etc/egi-check-in-validator/egi-check-in-validator.ini`
-- `/etc/egi-check-in-validator/logger.ini`
+- `/etc/egi-check-in-validator/config/egi-check-in-validator.ini`
+- `/etc/egi-check-in-validator/config/logger.ini`
 
 To add the mappings for the users, modify the plugin configuration file
 (`egi-check-in-validator.ini`).

@@ -11,11 +11,11 @@ import sys
 
 TIMEOUT = 5
 PLUGIN_CONFIG_PATHS = [
-    "/etc/egi-check-in-validator/egi-check-in-validator.ini",
+    "/etc/egi-check-in-validator/config/egi-check-in-validator.ini",
 ]
 # Setup logger
 log = logging.getLogger(__name__)
-LOGGER_CONFIG_PATH = "/etc/egi-check-in-validator/logger.ini"
+LOGGER_CONFIG_PATH = "/etc/egi-check-in-validator/config/logger.ini"
 
 
 def parse_arguments():
