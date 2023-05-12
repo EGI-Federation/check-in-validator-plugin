@@ -11,7 +11,7 @@ development.
 
 ### Release
 
-You can find all the available rpm packages in the
+You can find all the available RPM packages in the
 [releases](https://github.com/rciam/check-in-validator-plugin/releases).
 
 ### Source code (For development)
@@ -33,14 +33,16 @@ This section is covering how to configure the plugin. You will need to configure
 
 ### Plugin
 
-The `egi-check-in-validator` plugin has it's own configuration file. Just copy
-the example configuration file to the home directory, using the command:
+The `egi-check-in-validator` plugin has it's own configuration files, which are
+placed in `/etc/egi-check-in-validator` when installing the RPM package. The
+available configuration files are:
 
-```bash
-cp config/example-egi-check-in-validator.ini ~/egi-check-in-validator.ini
-```
+- `/etc/egi-check-in-validator/egi-check-in-validator.ini`
+- `/etc/egi-check-in-validator/logger.ini`
 
-Then, edit the configuration file and add the mapping for the users.
+To add the mappings for the users, modify the plugin configuration file
+(`egi-check-in-validator.ini`).
+
 The format of the syntax, is described bellow:
 
 ```text
@@ -73,19 +75,24 @@ bar=* https://aai-dev.egi.eu/auth/realms/egi * compute.create urn:mace:egi.eu:gr
 To execute the script use the command:
 
 ```bash
-python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
+python egi-check-in-validator.py
 ```
 
-Note: If the `-c` option is missing then the plugin will try to open the
-`egi-check-in-validator.ini` file from the following path:
+Note: If the configuration file is not located in the
+`/etc/egi-check-in-validator/` directory, then you will need to define the
+location of the file using the `-c` option.
 
-1. `/etc/egi-check-in-validator/egi-check-in-validator.ini`
+Example:
+
+```bash
+python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
+```
 
 If the configuration file does not exist in the above paths, then the script
 will fail with the message:
 
 ```text
-[egi-check-in-validator] ERROR: Parsing configuration: Configuration file was not found.
+[egi-check-in-validator] Parsing configuration: Configuration file was not found.
 ```
 
 ### HTCondor
@@ -141,7 +148,6 @@ Example:
 $ python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
 {"exp":1681213287,"iat":1681209687,"auth_time":1681209570,"jti":"92cfba6e-7c6b-4012-9f6c-2539ef1b76f6","iss":"https://aai-dev.egi.eu/auth/realms/egi","sub":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","typ":"Bearer","azp":"myClientID","nonce":"c2651c777c2c888fcf8244c22b1bcb14","session_state":"515679aa-b818-4902-ae7f-49b198aa0661","scope":"openid offline_access eduperson_entitlement voperson_id eduperson_entitlement_jwt eduperson_entitlement_jwt:urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu profile email","sid":"515679aa-b818-4902-ae7f-49b198aa0661","voperson_id":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","authenticating_authority":"https://idp.admin.grnet.gr/idp/shibboleth","eduperson_entitlement":["urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu"]}
 nikosev
-%
 ```
 
 ### Example providing JWT via environment variables
@@ -174,5 +180,4 @@ $ export BEARER_TOKEN_0_SCOPE_6=profile
 $ export BEARER_TOKEN_0_SCOPE_7=email
 $ python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
 nikosev
-%
 ```
