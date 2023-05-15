@@ -5,5 +5,4 @@ include egi-check-in-validator.spec
 include bin/egi-check-in-validator.py
 include config/example-egi-check-in-validator.ini
 include config/logger.ini
-include logs/egi-check-in-validator.log
 recursive-exclude bin *.pyc *.pyo

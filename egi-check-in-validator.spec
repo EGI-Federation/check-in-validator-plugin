@@ -29,10 +29,10 @@ python3 setup.py build
 python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUILD_ROOT --record=INSTALLED_FILES
 install --directory -m 644 %{buildroot}%{_sysconfdir}/%{name}/
 install --directory -m 644 %{buildroot}%{_sysconfdir}/%{name}/config
-install --directory -m 644 %{buildroot}%{_sysconfdir}/%{name}/logs
+install --directory -m 644 %{buildroot}%{_localstatedir}/log/%{name}
 cp config/example-egi-check-in-validator.ini %{buildroot}%{_sysconfdir}/%{name}/config/egi-check-in-validator.ini
 cp config/logger.ini %{buildroot}%{_sysconfdir}/%{name}/config/
-cp logs/egi-check-in-validator.log %{buildroot}%{_sysconfdir}/%{name}/logs/
+touch %{buildroot}%{_localstatedir}/log/%{name}/egi-check-in-validator.log
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -40,5 +40,5 @@ rm -rf $RPM_BUILD_ROOT
 %files -f INSTALLED_FILES
 %{_sysconfdir}/%{name}/config/egi-check-in-validator.ini
 %{_sysconfdir}/%{name}/config/logger.ini
-%{_sysconfdir}/%{name}/logs/egi-check-in-validator.log
+%{_localstatedir}/log/%{name}/egi-check-in-validator.log
 %defattr(-,root,root)
