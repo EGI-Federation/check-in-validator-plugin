@@ -38,5 +38,7 @@ cp logs/egi-check-in-validator.log %{buildroot}%{_sysconfdir}/%{name}/logs/
 rm -rf $RPM_BUILD_ROOT
 
 %files -f INSTALLED_FILES
-%{_sysconfdir}/%{name}/egi-check-in-validator.ini
+%{_sysconfdir}/%{name}/config/egi-check-in-validator.ini
+%{_sysconfdir}/%{name}/config/logger.ini
+%{_sysconfdir}/%{name}/logs/egi-check-in-validator.log
 %defattr(-,root,root)
