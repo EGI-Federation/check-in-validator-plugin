@@ -52,9 +52,9 @@ rm -rf $RPM_BUILD_ROOT
 - Add support for logging to syslog and/or dedicated file
 - Add config for logrotate
 - Update the default paths for the config files
-* Tue May 4 2023 nikosev <nikos.ev@hotmail.com> - 0.2.2-1
+* Thu May 4 2023 nikosev <nikos.ev@hotmail.com> - 0.2.2-1
 - Add shebang line
-* Tue May 4 2023 nikosev <nikos.ev@hotmail.com> - 0.2.1-1
+* Thu May 4 2023 nikosev <nikos.ev@hotmail.com> - 0.2.1-1
 - Only the username of the user must be printed to stdout
 * Tue Apr 25 2023 nikosev <nikos.ev@hotmail.com> - 0.2.0-1
 - Add configuration file for the plugin
