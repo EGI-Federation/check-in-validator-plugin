@@ -31,6 +31,7 @@ python3 setup.py install --single-version-externally-managed -O1 --root=$RPM_BUI
 install --directory -m 644 %{buildroot}%{_sysconfdir}/%{name}/
 install --directory -m 644 %{buildroot}%{_sysconfdir}/%{name}/config
 install --directory -m 644 %{buildroot}%{_localstatedir}/log/%{name}
+install --directory -m 644 %{buildroot}%{_sysconfdir}/%{logrotate_dir}/
 cp config/example-egi-check-in-validator.ini %{buildroot}%{_sysconfdir}/%{name}/config/egi-check-in-validator.ini
 cp config/logger.ini %{buildroot}%{_sysconfdir}/%{name}/config/
 cp config/logrotate.conf %{buildroot}%{_sysconfdir}/%{logrotate_dir}/%{name}
