@@ -3,15 +3,19 @@
 import argparse
 import configparser
 import json
+import logging
+import logging.config
 import os
 import select
 import sys
 
 TIMEOUT = 5
-CONFIG_PATHS = [
-    "/etc/arc-ce/config.d/egi-check-in-validator.conf",
-    "/etc/condor-ce/config.d/egi-check-in-validator.conf",
+PLUGIN_CONFIG_PATHS = [
+    "/etc/egi-check-in-validator/config/egi-check-in-validator.ini",
 ]
+# Setup logger
+log = logging.getLogger(__name__)
+LOGGER_CONFIG_PATH = "/etc/egi-check-in-validator/config/logger.ini"
 
 
 def parse_arguments():
@@ -22,35 +26,39 @@ def parse_arguments():
 
 
 def read_config_file(arguments):
-    global CONFIG_PATHS
+    global PLUGIN_CONFIG_PATHS
+    global LOGGER_CONFIG_PATH
     filename = None
-    paths = [arguments["config"]] + CONFIG_PATHS
+    error_message_header = "[egi-check-in-validator] Parsing configuration: "
+    paths = [arguments["config"]] + PLUGIN_CONFIG_PATHS
     for path in paths:
         if path and os.path.exists(path):
             filename = path
     if not filename:
-        sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-        sys.stderr.write("Configuration file was not found.")
+        log.error(error_message_header + "Configuration file was not found.")
         sys.exit(1)
 
     config = configparser.ConfigParser()
     config.read(filename)
+    if "logger" in config:
+        logger_path = config["logger"]["config_path"]
+    else:
+        logger_path = LOGGER_CONFIG_PATH
+    logging.config.fileConfig(logger_path, disable_existing_loggers=False)
     mappings = {}
     for key, value in config.items("mappings"):
         value = value.rstrip()
         line = value.split(" ")
         if len(line) == 5:
+            error_message = '"{}" Mapper: {} cannot be "*". Please enter a valid value.'
             if line[1] == "*":
-                sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-                sys.stderr.write('"{}" Mapper: ISSUER cannot be "*". Please enter a valid value.'.format(key))
+                log.error(error_message_header + error_message.format(key, "ISSUER"))
                 sys.exit(1)
             if line[4] == "*":
-                sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-                sys.stderr.write('"{}" Mapper: GROUP cannot be "*". Please enter a valid value.'.format(key))
+                log.error(error_message_header + error_message.format(key, "GROUP"))
                 sys.exit(1)
         else:
-            sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-            sys.stderr.write('"{}" Mapper: invalid mapping configuration'.format(key))
+            log.error(error_message_header + '"{}" Mapper: invalid mapping configuration'.format(key))
             sys.exit(1)
         mappings[key] = {
             "unique_id": line[0],
@@ -140,8 +148,9 @@ def map_user(user, rules, config_file_path):
             sys.stdout.write(str(rule))
             sys.stdout.write("\n")
             sys.exit(0)
-    sys.stderr.write("[egi-check-in-validator] ERROR: Parsing configuration: ")
-    sys.stderr.write("Could not match identity based on config file: " + str(config_file_path))
+    log.error(
+        "[egi-check-in-validator] Mapping user: Could not match identity based on config file: " + str(config_file_path)
+    )
     sys.exit(1)
 
 
