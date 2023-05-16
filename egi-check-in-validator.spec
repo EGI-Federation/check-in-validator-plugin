@@ -45,3 +45,21 @@ rm -rf $RPM_BUILD_ROOT
 %{_localstatedir}/log/%{name}/egi-check-in-validator.log
 %{_sysconfdir}/%{logrotate_dir}/%{name}
 %defattr(-,root,root)
+
+%changelog
+* DDD MMM dd YYYY nikosev <nikos.ev@hotmail.com> - Unreleased
+- Add Makefile
+- Add support for logging to syslog and/or dedicated file
+- Add config for logrotate
+- Update the default paths for the config files
+* Tue May 4 2023 nikosev <nikos.ev@hotmail.com> - 0.2.2-1
+- Add shebang line
+* Tue May 4 2023 nikosev <nikos.ev@hotmail.com> - 0.2.1-1
+- Only the username of the user must be printed to stdout
+* Tue Apr 25 2023 nikosev <nikos.ev@hotmail.com> - 0.2.0-1
+- Add configuration file for the plugin
+- Parse iss and aud claim from JWT/environment variables
+- Print the mapping of the use as output
+- Plugin exits properly, instead of printing 0/1
+* Wed Apr 12 2023 nikosev <nikos.ev@hotmail.com> - 0.1.0-1
+- Initial version of egi-check-in-validator-plugin
