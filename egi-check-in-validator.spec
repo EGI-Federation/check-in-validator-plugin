@@ -1,5 +1,5 @@
 %define name egi-check-in-validator
-%define version 0.2.2
+%define version 0.3.0
 %define release 1
 %define logrotate_dir logrotate.d
 
@@ -47,7 +47,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
-* DDD MMM dd YYYY nikosev <nikos.ev@hotmail.com> - Unreleased
+* Tue May 16 2023 nikosev <nikos.ev@hotmail.com> - 0.3.0-1
 - Add Makefile
 - Add support for logging to syslog and/or dedicated file
 - Add config for logrotate

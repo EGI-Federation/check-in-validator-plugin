@@ -4,7 +4,7 @@ from os import path
 from setuptools import find_packages, setup
 
 __name__ = "egi-check-in-validator"
-__version__ = "0.2.2"
+__version__ = "0.3.0"
 
 here = path.abspath(path.dirname(__file__))
 
