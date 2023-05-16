@@ -5,14 +5,32 @@ plugin can be used by HTCondor-CE and ARC-CE.
 
 ## Installation
 
-This plugin can be installed by downloading the rpm packages from the releases
+This plugin can be installed by downloading the RPM packages from the releases
 or by using the source code. The source code should be used only for
 development.
 
 ### Release
 
-You can find all the available rpm packages in the
+You can find all the available RPM packages in the
 [releases](https://github.com/rciam/check-in-validator-plugin/releases).
+
+Download the RPM package to your machine and the install it by running the
+command:
+
+For CentOS:
+
+```bash
+yum install egi-check-in-validator-X.Y.Z.noarch.rpm
+```
+
+For RHEL:
+
+```bash
+dnf install egi-check-in-validator-X.Y.Z.noarch.rpm
+```
+
+The executable will be installed in the `/usr/local/bin/` directory and the
+config files in `/etc/egi-check-in-validator/config`.
 
 ### Source code (For development)
 
@@ -33,14 +51,18 @@ This section is covering how to configure the plugin. You will need to configure
 
 ### Plugin
 
-The `egi-check-in-validator` plugin has it's own configuration file. Just copy
-the example configuration file to the home directory, using the command:
+The `egi-check-in-validator` plugin has it's own configuration files, which are
+placed in `/etc/egi-check-in-validator` when installing the RPM package. The
+available configuration files are:
 
-```bash
-cp example-egi-check-in-validator.ini ~/egi-check-in-validator.ini
-```
+- `/etc/egi-check-in-validator/config/egi-check-in-validator.ini`
+- `/etc/egi-check-in-validator/config/logger.ini`
 
-Then, edit the configuration file and add the mapping for the users.
+#### Mapping configuration
+
+To add the mappings for the users, modify the plugin configuration file
+(`egi-check-in-validator.ini`).
+
 The format of the syntax, is described bellow:
 
 ```text
@@ -73,22 +95,46 @@ bar=* https://aai-dev.egi.eu/auth/realms/egi * compute.create urn:mace:egi.eu:gr
 To execute the script use the command:
 
 ```bash
-python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
+python /usr/local/bin/egi-check-in-validator.py
 ```
 
-Note: If the `-c` option is missing then the plugin will try to open the
-`egi-check-in-validator.ini` file from the following paths:
+Note: If the configuration file is not located in the
+`/etc/egi-check-in-validator/config` directory, then you will need to define
+the location of the file using the `-c` option.
 
-1. `/etc/egi-check-in-validator/egi-check-in-validator.ini`
-2. `/etc/arc-ce/config.d/egi-check-in-validator.ini`
-3. `/etc/condor-ce/config.d/egi-check-in-validator.ini`
+Example:
+
+```bash
+python /usr/local/bin/egi-check-in-validator.py -c ~/egi-check-in-validator.ini
+```
 
 If the configuration file does not exist in the above paths, then the script
 will fail with the message:
 
 ```text
-[egi-check-in-validator] ERROR: Parsing configuration: Configuration file was not found.
+[egi-check-in-validator] Parsing configuration: Configuration file was not found.
 ```
+
+#### Logger configuration
+
+By default, the script will sent the log messages to `syslog` and the dedicated
+log file of the script
+(`/var/log/egi-check-in-validator/egi-check-in-validator.log`).
+
+If you need to disable the one of the two log handles you will need to modify
+the line 6 in `/etc/egi-check-in-validator/config/logger.ini` and remove the
+handler that you need to disable.
+
+Example for disabling the file handler:
+
+```ini
+[logger_root]
+level=INFO
+handlers=syslogHandler
+```
+
+If you prefer to log the messages to the dedicated log file, you can configure
+the log rotation in `/etc/logrotate.d/egi-check-in-validator`.
 
 ### HTCondor
 
@@ -107,7 +153,7 @@ Then, create a file under `/etc/condor-ce/config.d/` like this:
 ```text
 SEC_SCITOKENS_ALLOW_FOREIGN_TOKENS=true
 SEC_SCITOKENS_PLUGIN_NAMES=EGI
-SEC_SCITOKENS_PLUGIN_EGI_COMMAND=$(LIBEXEC)/egi-check-in-validator.py -c <PATH_TO_CONFIG_FILE>
+SEC_SCITOKENS_PLUGIN_EGI_COMMAND=/usr/local/bin/egi-check-in-validator.py
 ```
 
 ## How the plugin works
@@ -140,10 +186,9 @@ nikosev=bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu 
 Example:
 
 ```bash
-$ python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
+$ python /usr/local/bin/egi-check-in-validator.py
 {"exp":1681213287,"iat":1681209687,"auth_time":1681209570,"jti":"92cfba6e-7c6b-4012-9f6c-2539ef1b76f6","iss":"https://aai-dev.egi.eu/auth/realms/egi","sub":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","typ":"Bearer","azp":"myClientID","nonce":"c2651c777c2c888fcf8244c22b1bcb14","session_state":"515679aa-b818-4902-ae7f-49b198aa0661","scope":"openid offline_access eduperson_entitlement voperson_id eduperson_entitlement_jwt eduperson_entitlement_jwt:urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu profile email","sid":"515679aa-b818-4902-ae7f-49b198aa0661","voperson_id":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","authenticating_authority":"https://idp.admin.grnet.gr/idp/shibboleth","eduperson_entitlement":["urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu"]}
 nikosev
-%
 ```
 
 ### Example providing JWT via environment variables
@@ -174,7 +219,6 @@ $ export BEARER_TOKEN_0_SCOPE_4=eduperson_entitlement
 $ export BEARER_TOKEN_0_SCOPE_5=voperson_id
 $ export BEARER_TOKEN_0_SCOPE_6=profile
 $ export BEARER_TOKEN_0_SCOPE_7=email
-$ python egi-check-in-validator.py -c ~/egi-check-in-validator.ini
+$ python /usr/local/bin/egi-check-in-validator.py
 nikosev
-%
 ```

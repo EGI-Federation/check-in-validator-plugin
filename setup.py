@@ -3,6 +3,9 @@ from os import path
 
 from setuptools import find_packages, setup
 
+__name__ = "egi-check-in-validator"
+__version__ = "0.2.2"
+
 here = path.abspath(path.dirname(__file__))
 
 # Get the long description from the README file
@@ -17,14 +20,14 @@ with open(path.join(here, "README.md"), encoding="utf-8") as f:
 # dependency_links = [x.strip().replace('git+', '') for x in all_reqs if x.startswith('git+')]
 
 setup(
-    name="egi-check-in-validator",
+    name=__name__,
     author="nikosev",
     author_email="nikos.ev@hotmail.com",
-    version="0.2.0",
+    version=__version__,
     license="ASL 2.0",
     url="https://github.com/rciam/check-in-validator-plugin",
     packages=find_packages(),
-    scripts=["egi-check-in-validator.py"],
+    scripts=["bin/egi-check-in-validator.py"],
     zip_safe=False,
     # install_requires=install_requires,
     # dependency_links=dependency_links,
