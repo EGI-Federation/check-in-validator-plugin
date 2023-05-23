@@ -222,3 +222,14 @@ $ export BEARER_TOKEN_0_SCOPE_7=email
 $ python /usr/bin/egi-check-in-validator.py
 nikosev
 ```
+
+## Preparing a release
+
+- Prepare a changelog from the last version, including contributors' names
+- Prepare a PR with
+  - Updating version and changelog in
+    - [CHANGELOG.md](CHANGELOG.md)
+    - [egi-check-in-validator.spec](egi-check-in-validator.spec)
+    - [setup.py](setup.py)
+- Merge the PR, then tag and release a new version
+  - GitHub Actions build and attach packages to the release page
