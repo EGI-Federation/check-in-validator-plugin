@@ -1,5 +1,5 @@
 %define name egi-check-in-validator
-%define version 0.3.0
+%define version 0.3.1
 %define logrotate_dir logrotate.d
 
 Summary: A plugin for checking if an Access Token issued by EGI Check-in is valid. This plugin can be used by HTCondor-CE and ARC-CE
@@ -50,6 +50,8 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(-,root,root)
 
 %changelog
+* Tue May 23 2023 nikosev <nikos.ev@hotmail.com> - 0.3.1-1
+- Add GitHub Action for building RPM packages
 * Tue May 16 2023 nikosev <nikos.ev@hotmail.com> - 0.3.0-1
 - Add Makefile
 - Add support for logging to syslog and/or dedicated file
