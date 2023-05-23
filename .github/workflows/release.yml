@@ -31,8 +31,8 @@ jobs:
         with:
           name: rpms7
           path: |
-            build/RPMS/noarch/egi-check-in-validator-*.el7.noarch.rpm
-            build/SRPMS/egi-check-in-validator-*.el7.src.rpm
+            /root/rpmbuild/RPMS/noarch/egi-check-in-validator-*.el7.noarch.rpm
+            /root/rpmbuild/SRPMS/egi-check-in-validator-*.el7.src.rpm
 
   almalinux8:
     name: Build AlmaLinux 8 RPMs
@@ -55,8 +55,8 @@ jobs:
         with:
           name: rpms8
           path: |
-            build/RPMS/noarch/egi-check-in-validator-*.el8.noarch.rpm
-            build/SRPMS/egi-check-in-validator-*.el8.src.rpm
+            /root/rpmbuild/RPMS/noarch/egi-check-in-validator-*.el8.noarch.rpm
+            /root/rpmbuild/SRPMS/egi-check-in-validator-*.el8.src.rpm
 
   almalinux9:
     name: Build AlmaLinux 9 RPMs
@@ -79,8 +79,8 @@ jobs:
         with:
           name: rpms9
           path: |
-            build/RPMS/noarch/egi-check-in-validator-*.el9.noarch.rpm
-            build/SRPMS/egi-check-in-validator-*.el9.src.rpm
+            /root/rpmbuild/RPMS/noarch/egi-check-in-validator-*.el9.noarch.rpm
+            /root/rpmbuild/SRPMS/egi-check-in-validator-*.el9.src.rpm
 
   release7:
     name: Upload CentOS 7 release artefacts
@@ -95,8 +95,8 @@ jobs:
       - name: Find package name
         id: package_name_centos7
         run: |
-          rpm_path=$(find . -name 'egi-check-in-validator-*.el7.noarch.rpm')
-          src_path=$(find . -name 'egi-check-in-validator-*.el7.src.rpm')
+          rpm_path=$(find /root/rpmbuild -name 'egi-check-in-validator-*.el7.noarch.rpm')
+          src_path=$(find /root/rpmbuild -name 'egi-check-in-validator-*.el7.src.rpm')
           echo "rpm_path=${rpm_path}" >> "$GITHUB_OUTPUT"
           echo "src_path=${src_path}" >> "$GITHUB_OUTPUT"
       - name: Attach CentOS 7 RPMs to the release
@@ -122,8 +122,8 @@ jobs:
       - name: Find package name
         id: package_name_almalinux8
         run: |
-          rpm_path=$(find . -name 'egi-check-in-validator-*.el8.noarch.rpm')
-          src_path=$(find . -name 'egi-check-in-validator-*.el8.src.rpm')
+          rpm_path=$(find /root/rpmbuild -name 'egi-check-in-validator-*.el8.noarch.rpm')
+          src_path=$(find /root/rpmbuild -name 'egi-check-in-validator-*.el8.src.rpm')
           echo "rpm_path=${rpm_path}" >> "$GITHUB_OUTPUT"
           echo "src_path=${src_path}" >> "$GITHUB_OUTPUT"
       - name: Attach AlmaLinux 8 RPMs to the release
@@ -149,8 +149,8 @@ jobs:
       - name: Find package name
         id: package_name_almalinux9
         run: |
-          rpm_path=$(find . -name 'egi-check-in-validator-*.el9.noarch.rpm')
-          src_path=$(find . -name 'egi-check-in-validator-*.el9.src.rpm')
+          rpm_path=$(find /root/rpmbuild -name 'egi-check-in-validator-*.el9.noarch.rpm')
+          src_path=$(find /root/rpmbuild -name 'egi-check-in-validator-*.el9.src.rpm')
           echo "rpm_path=${rpm_path}" >> "$GITHUB_OUTPUT"
           echo "src_path=${src_path}" >> "$GITHUB_OUTPUT"
       - name: Attach AlmaLinux 9 RPMs to the release
