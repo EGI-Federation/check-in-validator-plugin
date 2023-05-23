@@ -1,6 +1,8 @@
 PKGNAME=$(shell grep -s '^__name__\s*=' setup.py | sed -e 's/^__name__\s*=\s*//')
 PKGVERSION=$(shell grep -s '^__version__\s*=' setup.py | sed -e 's/^__version__\s*=\s*//')
+RELEASE=$(shell grep Release: *.spec | cut -d"%" -f1 | sed 's/^[^:]*:[^0-9]*//')
 DIST=$(shell rpm --eval '%dist')
+BUILD=$(shell pwd)/build
 
 default:
 	@echo "Nothing to do"
@@ -12,20 +14,31 @@ dist:
 	@rm -r dist
 
 sources: dist
+	@mkdir -p $(BUILD)
+	@cp ${PKGNAME}-${PKGVERSION}.tar.gz $(BUILD)/
 
-srpm: dist
+prepare: sources
+	@mkdir -p $(BUILD)/RPMS/noarch
+	@mkdir -p $(BUILD)/SRPMS/
+	@mkdir -p $(BUILD)/SPECS/
+	@mkdir -p $(BUILD)/SOURCES/
+	@mkdir -p $(BUILD)/BUILD/
+	cp $(BUILD)/${PKGNAME}-${PKGVERSION}.tar.gz $(BUILD)/SOURCES
+	cp ${PKGNAME}.spec $(BUILD)/SPECS
+
+srpm: prepare
 	@echo "-- Building srpm --"
-	@rpmbuild -ts --define="dist $(DIST)" ${PKGNAME}-${PKGVERSION}.tar.gz
+	@rpmbuild -bs --define="dist $(DIST)" --define="_topdir $(BUILD)" $(BUILD)/SPECS/$(PKGNAME).spec
 
-rpm: dist
+rpm: srpm
 	@echo "-- Building rpm --"
-	@rpmbuild -ta --define="dist $(DIST)" ${PKGNAME}-${PKGVERSION}.tar.gz
+	@rpmbuild --rebuild --define="dist $(DIST)" --define="_topdir $(BUILD)" $(BUILD)/SRPMS/$(PKGNAME)-$(PKGVERSION)-$(RELEASE)$(DIST).src.rpm
 
 clean:
 	@echo "-- Cleaning --"
-	@rm -rf dist
+	@rm -rf build dist
 	@rm -rf ${PKGNAME}-${PKGVERSION}.tar.gz
 	@find . -name '${PKGNAME}.egg-info' -exec rm -fr {} +
 	@find . -name '${PKGNAME}.egg' -exec rm -f {} +
 
-.PHONY: clean
+.PHONY: dist srpm rpm sources clean
