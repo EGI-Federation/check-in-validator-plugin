@@ -37,7 +37,6 @@ install --directory -m 644 %{buildroot}%{_sysconfdir}/%{logrotate_dir}/
 cp config/example-egi-check-in-validator.ini %{buildroot}%{_sysconfdir}/%{name}/config/egi-check-in-validator.ini
 cp config/logger.ini %{buildroot}%{_sysconfdir}/%{name}/config/
 cp config/logrotate.conf %{buildroot}%{_sysconfdir}/%{logrotate_dir}/%{name}
-touch %{buildroot}%{_localstatedir}/log/%{name}/egi-check-in-validator.log
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -45,7 +44,6 @@ rm -rf $RPM_BUILD_ROOT
 %files -f INSTALLED_FILES
 %{_sysconfdir}/%{name}/config/egi-check-in-validator.ini
 %{_sysconfdir}/%{name}/config/logger.ini
-%{_localstatedir}/log/%{name}/egi-check-in-validator.log
 %{_sysconfdir}/%{logrotate_dir}/%{name}
 %defattr(-,root,root)
 
