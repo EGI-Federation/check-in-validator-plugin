@@ -117,24 +117,41 @@ will fail with the message:
 
 #### Logger configuration
 
-By default, the script will sent the log messages to `syslog` and the dedicated
-log file of the script
-(`/var/log/egi-check-in-validator/egi-check-in-validator.log`).
+By default, the script will sent the log messages to `syslog`.
 
-If you need to disable the one of the two log handles you will need to modify
-the line 6 in `/etc/egi-check-in-validator/config/logger.ini` and remove the
-handler that you need to disable.
+If you need to sent the log messages to a separate file, you will need to edit
+the `handlers` under the `[logger_root]` section and the properties under the
+`[handler_fileHandler]` section in
+`/etc/egi-check-in-validator/config/logger.ini`.
 
-Example for disabling the file handler:
+Example for enabling the file handler:
 
 ```ini
 [logger_root]
 level=INFO
-handlers=syslogHandler
+handlers=syslogHandler,fileHandler
+
+[handler_fileHandler]
+class=FileHandler
+level=INFO
+formatter=simpleFormatter
+args=('/var/log/egi-check-in-validator/egi-check-in-validator.log', 'a')
 ```
 
-If you prefer to log the messages to the dedicated log file, you can configure
-the log rotation in `/etc/logrotate.d/egi-check-in-validator`.
+Please note that you will need to create the log file in the location you will
+choose and give the right ownership.
+
+Example for HTCondor-CE:
+
+```shell
+mkdir /var/log/egi-check-in-validator
+touch /var/log/egi-check-in-validator/egi-check-in-validator.log
+chmod -R 640 /var/log/egi-check-in-validator
+chown -R condor:condor /var/log/egi-check-in-validator
+```
+
+Also, you can configure the log rotation in
+`/etc/logrotate.d/egi-check-in-validator`.
 
 ### HTCondor
 
