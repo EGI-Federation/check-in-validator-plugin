@@ -1,5 +1,5 @@
 %define name egi-check-in-validator
-%define version 0.3.1
+%define version 0.3.2
 %define logrotate_dir logrotate.d
 
 Summary: A plugin for checking if an Access Token issued by EGI Check-in is valid. This plugin can be used by HTCondor-CE and ARC-CE
@@ -37,7 +37,6 @@ install --directory -m 644 %{buildroot}%{_sysconfdir}/%{logrotate_dir}/
 cp config/example-egi-check-in-validator.ini %{buildroot}%{_sysconfdir}/%{name}/config/egi-check-in-validator.ini
 cp config/logger.ini %{buildroot}%{_sysconfdir}/%{name}/config/
 cp config/logrotate.conf %{buildroot}%{_sysconfdir}/%{logrotate_dir}/%{name}
-touch %{buildroot}%{_localstatedir}/log/%{name}/egi-check-in-validator.log
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -45,11 +44,12 @@ rm -rf $RPM_BUILD_ROOT
 %files -f INSTALLED_FILES
 %{_sysconfdir}/%{name}/config/egi-check-in-validator.ini
 %{_sysconfdir}/%{name}/config/logger.ini
-%{_localstatedir}/log/%{name}/egi-check-in-validator.log
 %{_sysconfdir}/%{logrotate_dir}/%{name}
 %defattr(-,root,root)
 
 %changelog
+* Fri Jun 30 2023 nikosev <nikos.ev@hotmail.com> - 0.3.2-1
+- Disable logging to dedicated file
 * Tue May 23 2023 nikosev <nikos.ev@hotmail.com> - 0.3.1-1
 - Add GitHub Action for building RPM packages
 * Tue May 16 2023 nikosev <nikos.ev@hotmail.com> - 0.3.0-1
