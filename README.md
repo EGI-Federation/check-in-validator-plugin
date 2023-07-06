@@ -63,7 +63,7 @@ available configuration files are:
 To add the mappings for the users, modify the plugin configuration file
 (`egi-check-in-validator.ini`).
 
-The format of the syntax, is described bellow:
+The syntax of mapping rules is described bellow:
 
 ```text
 MAPPING=UNIQUE_IDENTIFIER ISSUER AUDIENCE SCOPE GROUP
@@ -117,9 +117,9 @@ will fail with the message:
 
 #### Logger configuration
 
-By default, the script will sent the log messages to `syslog`.
+By default, the script will send the log messages to `syslog`.
 
-If you need to sent the log messages to a separate file, you will need to edit
+If you need to send the log messages to a separate file, you will need to edit
 the `handlers` under the `[logger_root]` section and the properties under the
 `[handler_fileHandler]` section in
 `/etc/egi-check-in-validator/config/logger.ini`.
@@ -204,7 +204,7 @@ Example:
 
 ```bash
 $ python /usr/bin/egi-check-in-validator.py
-{"exp":1681213287,"iat":1681209687,"auth_time":1681209570,"jti":"92cfba6e-7c6b-4012-9f6c-2539ef1b76f6","iss":"https://aai-dev.egi.eu/auth/realms/egi","sub":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","typ":"Bearer","azp":"myClientID","nonce":"c2651c777c2c888fcf8244c22b1bcb14","session_state":"515679aa-b818-4902-ae7f-49b198aa0661","scope":"openid offline_access eduperson_entitlement voperson_id eduperson_entitlement_jwt eduperson_entitlement_jwt:urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu profile email","sid":"515679aa-b818-4902-ae7f-49b198aa0661","voperson_id":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","authenticating_authority":"https://idp.admin.grnet.gr/idp/shibboleth","eduperson_entitlement":["urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu"]}
+{"exp":1681213287,"iat":1681209687,"auth_time":1681209570,"jti":"92cfba6e-7c6b-4012-9f6c-2539ef1b76f6","iss":"https://aai-dev.egi.eu/auth/realms/egi","sub":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","typ":"Bearer","azp":"myClientID","nonce":"c2651c777c2c888fcf8244c22b1bcb14","session_state":"515679aa-b818-4902-ae7f-49b198aa0661","scope":"openid voperson_id profile email compute.create compute.read compute.modify compute.cancel eduperson_entitlement:urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu","sid":"515679aa-b818-4902-ae7f-49b198aa0661","voperson_id":"bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu","authenticating_authority":"https://idp.admin.grnet.gr/idp/shibboleth"}
 nikosev
 ```
 
@@ -216,26 +216,25 @@ Example configuration:
 $ cat ~/egi-check-in-validator.ini
 # [mapping-example]
 # MAPPING=UNIQUE_IDENTIFIER ISSUER AUD SCOPE GROUP
-# foo=* https://aai-dev.egi.eu/auth/realms/egi/ * compute.create urn:mace:egi.eu:group:vo.token-integration.egi.eu:role=member#aai.egi.eu
+# foo=* https://aai-dev.egi.eu/auth/realms/egi/ * compute.create urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu
 
 [mappings]
-nikosev=bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu https://aai-dev.egi.eu/auth/realms/egi * eduperson_entitlement_jwt urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu
+nikosev=bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu https://aai-dev.egi.eu/auth/realms/egi * urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu
 ```
 
 Example:
 
 ```bash
 $ export BEARER_TOKEN_0_CLAIM_voperson_id_0=bf009c87cb04f0a69fb2cc98767147e5b7408bedaef07b70ef33ef777318e610@egi.eu
-$ export BEARER_TOKEN_0_CLAIM_eduperson_entitlement_0=urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu
-$ export BEARER_TOKEN_0_CLAIM_eduperson_entitlement_1=urn:mace:egi.eu:group:vo.example.org:role=manager#aai.egi.eu
 $ export BEARER_TOKEN_0_SCOPE_0=openid
-$ export BEARER_TOKEN_0_SCOPE_1=compute.modify
-$ export BEARER_TOKEN_0_SCOPE_2=compute.create
-$ export BEARER_TOKEN_0_SCOPE_3=compute.read
-$ export BEARER_TOKEN_0_SCOPE_4=eduperson_entitlement
-$ export BEARER_TOKEN_0_SCOPE_5=voperson_id
-$ export BEARER_TOKEN_0_SCOPE_6=profile
-$ export BEARER_TOKEN_0_SCOPE_7=email
+$ export BEARER_TOKEN_0_SCOPE_1=voperson_id
+$ export BEARER_TOKEN_0_SCOPE_2=profile
+$ export BEARER_TOKEN_0_SCOPE_3=email
+$ export BEARER_TOKEN_0_SCOPE_4=compute.create
+$ export BEARER_TOKEN_0_SCOPE_5=compute.read
+$ export BEARER_TOKEN_0_SCOPE_6=compute.modify
+$ export BEARER_TOKEN_0_SCOPE_7=compute.cancel
+$ export BEARER_TOKEN_0_SCOPE_8=eduperson_entitlement:urn:mace:egi.eu:group:vo.example.org:role=member#aai.egi.eu
 $ python /usr/bin/egi-check-in-validator.py
 nikosev
 ```
